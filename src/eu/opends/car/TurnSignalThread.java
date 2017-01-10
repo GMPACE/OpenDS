@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import eu.opends.camera.CameraFactory.CameraMode;
 import eu.opends.car.LightTexturesContainer.LightState;
 import eu.opends.car.LightTexturesContainer.TurnSignalState;
 import eu.opends.main.Simulator;
+import eu.opends.tools.Hud;
 import eu.opends.tools.PanelCenter;
 
 /**
@@ -107,8 +108,10 @@ public class TurnSignalThread extends Thread
 			default:  break;
 		}
 		
-		PanelCenter.setLeftTurnSignalArrow(leftIsOn);
-		PanelCenter.setRightTurnSignalArrow(rightIsOn);	
+		//PanelCenter.setLeftTurnSignalArrow(leftIsOn);
+		//PanelCenter.setRightTurnSignalArrow(rightIsOn);	
+		Hud.setLeftTurnSignalArrow(leftIsOn);
+		Hud.setRightTurnSignalArrow(rightIsOn);
 		
 		if(sim.getCameraFactory().getCamMode().equals(CameraMode.EGO))
 		{

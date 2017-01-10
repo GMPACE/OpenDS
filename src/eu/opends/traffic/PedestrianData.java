@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -18,9 +18,6 @@
 
 package eu.opends.traffic;
 
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
-
 /**
  * 
  * @author Rafael Math
@@ -28,29 +25,22 @@ import com.jme3.math.Vector3f;
 public class PedestrianData 
 {
 	private String name;
-	private boolean enabled;
 	private float mass;
 	private String animationStand;
 	private String animationWalk;
-	private float localScale;
-	private Vector3f localTranslation;
-	private Quaternion localRotation;
+	private float scale;
 	private String modelPath;
 	private FollowBoxSettings followBoxSettings;
 	
 	
-	public PedestrianData(String name, boolean enabled, float mass, String animationStand, String animationWalk, 
-			float localScale, Vector3f localTranslation, Quaternion localRotation, String modelPath, 
-			FollowBoxSettings followBoxSettings) 
+	public PedestrianData(String name, float mass, String animationStand, String animationWalk, 
+			float scale, String modelPath, FollowBoxSettings followBoxSettings) 
 	{
 		this.name = name;
-		this.enabled = enabled;
 		this.mass = mass;
 		this.animationStand = animationStand;
 		this.animationWalk = animationWalk;
-		this.localScale = localScale;
-		this.localTranslation = localTranslation;
-		this.localRotation = localRotation;
+		this.scale = scale;
 		this.modelPath = modelPath;
 		this.followBoxSettings = followBoxSettings;
 	}
@@ -58,11 +48,6 @@ public class PedestrianData
 
 	public String getName() {
 		return name;
-	}
-	
-
-	public boolean getEnabled() {
-		return enabled;
 	}
 	
 
@@ -81,18 +66,8 @@ public class PedestrianData
 	}
 
 
-	public float getLocalScale() {
-		return localScale;
-	}
-	
-	
-	public Vector3f getLocalTranslation() {
-		return localTranslation;
-	}
-
-	
-	public Quaternion getLocalRotation() {
-		return localRotation;
+	public float getScale() {
+		return scale;
 	}
 
 
@@ -103,6 +78,8 @@ public class PedestrianData
 
 	public FollowBoxSettings getFollowBoxSettings() {
 		return followBoxSettings;
-	}	
+	}
+	
+	
 
 }

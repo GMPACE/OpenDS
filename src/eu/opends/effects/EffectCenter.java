@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import com.jme3.post.filters.FogFilter;
 import com.jme3.post.filters.BloomFilter.GlowMode;
 import com.jme3.renderer.ViewPort;
 import com.jme3.shadow.DirectionalLightShadowFilter;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.shadow.EdgeFilteringMode;
 
 import eu.opends.camera.CameraFactory;
@@ -64,10 +65,6 @@ public class EffectCenter
 		this.sim = sim;
 		AssetManager assetManager = sim.getAssetManager();
 		
-		DirectionalLight sun = new DirectionalLight();
-		Vector3f sunLightDirection = new Vector3f(-0.2f, -0.9f, 0.2f); // TODO make adjustable
-		sun.setDirection(sunLightDirection.normalizeLocal());
-		
 		WeatherSettings weatherSettings = Simulator.getDrivingTask().getScenarioLoader().getWeatherSettings();
 		snowingPercentage = Math.max(weatherSettings.getSnowingPercentage(),-1);  // use -1 to suppress construction of SnowParticleEmitter
 		rainingPercentage = Math.max(weatherSettings.getRainingPercentage(),-1);  // use -1 to suppress construction of RainParticleEmitter
@@ -75,10 +72,8 @@ public class EffectCenter
 		isSnowing = (snowingPercentage >= 0);
 		isRaining = (rainingPercentage >= 0);
 		isFog = (fogPercentage >= 0);
-		
-		// switch off bloom filter when Oculus Rift is used
-		isBloom = Simulator.oculusRiftAttached ? false : Simulator.getDrivingTask().getScenarioLoader().isBloomFilter(); 
-		isShadow = Simulator.getDrivingTask().getScenarioLoader().isShadowFilter();
+		isBloom = !Simulator.oculusRiftAttached; // switch off bloom filter when Oculus Rift is used
+		isShadow = true;
 		
 		if(isSnowing)
 		{
@@ -94,7 +89,7 @@ public class EffectCenter
 			sim.getSceneNode().attachChild(rainParticleEmitter);
 		}
 		
-		if(isFog || isBloom || isShadow)
+		if(isFog || isBloom)
 		{
 			for(ViewPort viewPort : CameraFactory.getViewPortList())
 			{
@@ -108,71 +103,79 @@ public class EffectCenter
 			    {
 				    FogFilter fogFilter = new FogFilter();
 			        fogFilter.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
-			        fogFilter.setFogDistance(50); // TODO make adjustable
-			        fogFilter.setFogDensity(4.0f * (fogPercentage/100f));
+			        fogFilter.setFogDistance(155);
+			        fogFilter.setFogDensity(2.0f * (fogPercentage/100f));
 			        fogFilterList.add(fogFilter);
 			        processor.addFilter(fogFilter);
 			    }
 			    
 			    if(isBloom)
 			    {
-			    	// usage e.g. car chassis:
+			    	// ensure any object is set to glow, e.g. car chassis:
 			    	// chassis.getMaterial().setColor("GlowColor", ColorRGBA.Orange);
 			    	
 			    	BloomFilter bloom = new BloomFilter(GlowMode.Objects);
 			    	processor.addFilter(bloom);
 			    }
 			    
-			    if(isShadow)
-			    {					
-			    	DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, 1024, 3); // TODO make adjustable
-					dlsf.setLight(sun);
-					dlsf.setLambda(1f);
-					dlsf.setShadowIntensity(0.3f); // TODO make adjustable
-					dlsf.setEdgeFilteringMode(EdgeFilteringMode.PCFPOISSON);
-					dlsf.setEnabled(true);
-
-					processor.addFilter(dlsf);
-			    }
-			    
 			    viewPort.addProcessor(processor);
-			}	
+			}
 		}
-
-		/*
-		// DirectionalLightShadowFilter looks more realistic!!! 
 		
 		if(isShadow)
-		{	
-			ArrayList<ViewPort> viewPortList = CameraFactory.getViewPortList();
-
-			int shadowMapSize = 4096;
-			if(viewPortList.size() > 1)
-				shadowMapSize = 1024;
-	    	
-			for(ViewPort viewPort : viewPortList)
-			{
-		    	DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, shadowMapSize, 1);
-		    	dlsr.setLight(sun);
-		    	dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCFPOISSON);
-		    	viewPort.addProcessor(dlsr);
-			}
+		{//TODO
+			DirectionalLight sun = new DirectionalLight();
+			Vector3f sunLightDirection = new Vector3f(-0.2f, -0.9f, 0.2f); //TODO get from DT files
+			sun.setDirection(sunLightDirection.normalizeLocal());
 			
-			shadowMapSize = 1024;
-	    	DirectionalLightShadowRenderer dlsrBack = new DirectionalLightShadowRenderer(assetManager, shadowMapSize, 1);
-	    	dlsrBack.setLight(sun);
-	    	CameraFactory.getBackViewPort().addProcessor(dlsrBack);
-	    	
-	    	DirectionalLightShadowRenderer dlsrLeft = new DirectionalLightShadowRenderer(assetManager, shadowMapSize, 1);
-	    	dlsrLeft.setLight(sun);
-	    	CameraFactory.getLeftBackViewPort().addProcessor(dlsrLeft);
-	    	
-	    	DirectionalLightShadowRenderer dlsrRight = new DirectionalLightShadowRenderer(assetManager, shadowMapSize, 1);
-	    	dlsrRight.setLight(sun);
-	    	CameraFactory.getRightBackViewPort().addProcessor(dlsrRight);
-	    	
+			ArrayList<ViewPort> viewPortList = CameraFactory.getViewPortList();
+			
+			if(sim.getNumberOfScreens()>1)
+			{
+				int shadowMapSize = 4096;
+				if(viewPortList.size() > 1)
+					shadowMapSize = 1024;
+		    	
+				for(ViewPort viewPort : viewPortList)
+				{
+			    	DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, shadowMapSize, 1);
+			    	dlsr.setLight(sun);
+			    	dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCFPOISSON);
+			    	viewPort.addProcessor(dlsr);
+				}
+				
+				shadowMapSize = 1024;
+		    	DirectionalLightShadowRenderer dlsrBack = new DirectionalLightShadowRenderer(assetManager, shadowMapSize, 1);
+		    	dlsrBack.setLight(sun);
+		    	CameraFactory.getBackViewPort().addProcessor(dlsrBack);
+		    	
+		    	DirectionalLightShadowRenderer dlsrLeft = new DirectionalLightShadowRenderer(assetManager, shadowMapSize, 1);
+		    	dlsrLeft.setLight(sun);
+		    	CameraFactory.getLeftBackViewPort().addProcessor(dlsrLeft);
+		    	
+		    	DirectionalLightShadowRenderer dlsrRight = new DirectionalLightShadowRenderer(assetManager, shadowMapSize, 1);
+		    	dlsrRight.setLight(sun);
+		    	CameraFactory.getRightBackViewPort().addProcessor(dlsrRight);
+			}
+			else
+			{
+				// does not work with more than one screen
+				for(ViewPort viewPort : viewPortList)
+				{
+					DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, 1024, 3);
+					dlsf.setLight(sun);
+					dlsf.setLambda(1f);
+					dlsf.setShadowIntensity(0.3f);
+					dlsf.setEdgeFilteringMode(EdgeFilteringMode.PCFPOISSON);
+					dlsf.setEnabled(true);
+	
+					FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+					fpp.addFilter(dlsf);
+					
+					viewPort.addProcessor(fpp);
+				}
+			}
 		}
-		*/
 	}
 
 
@@ -207,7 +210,7 @@ public class EffectCenter
 			if(fogPercentageHasChanged)
 			{
 				for(FogFilter fogFilter : fogFilterList)
-					fogFilter.setFogDensity(4.0f * (fogPercentage/100f));
+					fogFilter.setFogDensity(2.0f * (fogPercentage/100f));
 				System.out.println("fog intensity: " + fogPercentage);
 				fogPercentageHasChanged = false;
 			}

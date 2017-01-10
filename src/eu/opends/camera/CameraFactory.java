@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -146,7 +146,7 @@ public abstract class CameraFactory
 	 */
 	public enum MirrorMode
 	{
-		OFF, BACK_ONLY, ALL, SIDE_ONLY
+		OFF, BACK_ONLY, RIGHT, LEFT
 	}
 	
 	
@@ -388,10 +388,15 @@ public abstract class CameraFactory
 	{
 		Camera topViewCam = cam.clone();
 		
-		float left = settingsLoader.getSetting(Setting.General_topView_viewPortLeft, 0.05f);
-		float right = settingsLoader.getSetting(Setting.General_topView_viewPortRight, 0.45f);
-		float bottom = settingsLoader.getSetting(Setting.General_topView_viewPortBottom, 0.58f);
-		float top = settingsLoader.getSetting(Setting.General_topView_viewPortTop, 0.98f);
+		//float left = settingsLoader.getSetting(Setting.General_topView_viewPortLeft, 0.05f);
+		float left = settingsLoader.getSetting(Setting.General_topView_viewPortLeft, -0.5f);
+		//float right = settingsLoader.getSetting(Setting.General_topView_viewPortRight, 0.45f);
+		float right = settingsLoader.getSetting(Setting.General_topView_viewPortRight, 1.5f);
+		//float bottom = settingsLoader.getSetting(Setting.General_topView_viewPortBottom, 0.58f);
+		float bottom = settingsLoader.getSetting(Setting.General_topView_viewPortBottom, -0.5f);
+		//float top = settingsLoader.getSetting(Setting.General_topView_viewPortTop, 0.98f);
+		float top = settingsLoader.getSetting(Setting.General_topView_viewPortTop, 1.5f);
+		
 		topViewVerticalDistance = settingsLoader.getSetting(Setting.General_topView_verticalDistance, 200f);
 		topViewcarOffset = settingsLoader.getSetting(Setting.General_topView_carOffset, 40f);
 		
@@ -431,19 +436,22 @@ public abstract class CameraFactory
 	/**
 	 *	Setup rear view mirror
 	 */
+	/*
+	 * Start --- KSS 
+	 * 백미러 설정
+	 * */
 	private void setupBackCamera() 
 	{
 		Camera backCam = cam.clone();
 		
-		float left = settingsLoader.getSetting(Setting.General_rearviewMirror_viewPortLeft, 0.3f);
-		float right = settingsLoader.getSetting(Setting.General_rearviewMirror_viewPortRight, 0.7f);
-		float bottom = settingsLoader.getSetting(Setting.General_rearviewMirror_viewPortBottom, 0.78f);
-		float top = settingsLoader.getSetting(Setting.General_rearviewMirror_viewPortTop, 0.98f);
+		float left = settingsLoader.getSetting(Setting.General_rearviewMirror_viewPortLeft, -0.5f);
+		float right = settingsLoader.getSetting(Setting.General_rearviewMirror_viewPortRight, 1.5f);
+		float bottom = settingsLoader.getSetting(Setting.General_rearviewMirror_viewPortBottom, -0.5f);
+		float top = settingsLoader.getSetting(Setting.General_rearviewMirror_viewPortTop, 1.5f);
 		float horizontalAngle = settingsLoader.getSetting(Setting.General_rearviewMirror_horizontalAngle, 0f);
 		float verticalAngle = settingsLoader.getSetting(Setting.General_rearviewMirror_verticalAngle, 0f);
 
-		/*
-		if(sim.getNumberOfScreens() > 1)
+	/*	if(sim.getNumberOfScreens() > 1)
 		{
 			left = 0.4f;
 			right = 0.6f;
@@ -451,7 +459,6 @@ public abstract class CameraFactory
 			top = 0.98f;
 		}
 		*/
-		
 		backMirrorFrame =createMirrorFrame("backViewFrame",left,right,bottom,top);
 		sim.getGuiNode().attachChild(backMirrorFrame);
 		
@@ -480,17 +487,21 @@ public abstract class CameraFactory
 		backCamNode.setLocalTranslation(new Vector3f(centerMirrorPos));
     	mainCameraNode.attachChild(backCamNode);
 	}
-	
+	//End -- KSS
 	
 	/**
 	 *	Setup left rear view mirror
 	 */
+	/*
+	 * Start --- KSS 
+	 * left백미러 설정
+	 * */
 	private void setupLeftBackCamera() 
 	{
-		float left = settingsLoader.getSetting(Setting.General_leftMirror_viewPortLeft, 0.02f);
-		float right = settingsLoader.getSetting(Setting.General_leftMirror_viewPortRight, 0.2f);
-		float bottom = settingsLoader.getSetting(Setting.General_leftMirror_viewPortBottom, 0.3f);
-		float top = settingsLoader.getSetting(Setting.General_leftMirror_viewPortTop, 0.6f);
+		float left = settingsLoader.getSetting(Setting.General_leftMirror_viewPortLeft, -0.5f);
+		float right = settingsLoader.getSetting(Setting.General_leftMirror_viewPortRight, 1.5f);
+		float bottom = settingsLoader.getSetting(Setting.General_leftMirror_viewPortBottom, -0.5f);
+		float top = settingsLoader.getSetting(Setting.General_leftMirror_viewPortTop, 1.5f);
 		float horizontalAngle = settingsLoader.getSetting(Setting.General_leftMirror_horizontalAngle, -45f);
 		float verticalAngle = settingsLoader.getSetting(Setting.General_leftMirror_verticalAngle, 10f);
 
@@ -526,16 +537,20 @@ public abstract class CameraFactory
     	mainCameraNode.attachChild(leftBackCamNode);
 	}
 	
-	
+	//End -- KSS
 	/**
 	 *	Setup right rear view mirror
 	 */
+	/*
+	 * Start --- KSS 
+	 * right 백미러 설정
+	 * */
 	private void setupRightBackCamera() 
 	{
-		float left = settingsLoader.getSetting(Setting.General_rightMirror_viewPortLeft, 0.8f);
-		float right = settingsLoader.getSetting(Setting.General_rightMirror_viewPortRight, 0.98f);
-		float bottom = settingsLoader.getSetting(Setting.General_rightMirror_viewPortBottom, 0.3f);
-		float top = settingsLoader.getSetting(Setting.General_rightMirror_viewPortTop, 0.6f);
+		float left = settingsLoader.getSetting(Setting.General_rightMirror_viewPortLeft, -0.5f);
+		float right = settingsLoader.getSetting(Setting.General_rightMirror_viewPortRight, 1.5f);
+		float bottom = settingsLoader.getSetting(Setting.General_rightMirror_viewPortBottom, -0.5f);
+		float top = settingsLoader.getSetting(Setting.General_rightMirror_viewPortTop, 1.5f);
 		float horizontalAngle = settingsLoader.getSetting(Setting.General_rightMirror_horizontalAngle, 45f);
 		float verticalAngle = settingsLoader.getSetting(Setting.General_rightMirror_verticalAngle, 10f);
 		
@@ -571,7 +586,7 @@ public abstract class CameraFactory
     	mainCameraNode.attachChild(rightBackCamNode);
 	}
 	
-	
+	//End -- KSS
 	private Picture createMirrorFrame(String name, float left, float right, float bottom, float top)
 	{
 		Picture mirrorImage = new Picture(name);

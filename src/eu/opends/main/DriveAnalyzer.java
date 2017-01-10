@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -56,6 +56,7 @@ import eu.opends.input.KeyBindingCenter;
 import eu.opends.knowledgeBase.KnowledgeBase;
 import eu.opends.niftyGui.AnalyzerFileSelectionGUIController;
 import eu.opends.tools.PanelCenter;
+import eu.opends.tools.Hud;
 
 /**
  * 
@@ -165,6 +166,7 @@ public class DriveAnalyzer extends SimulationBasics
 		loadDrivingTask();
 		
 		PanelCenter.init(this);
+		Hud.init(this);
 		
 		loadData();
 		
@@ -594,6 +596,7 @@ public class DriveAnalyzer extends SimulationBasics
 		
 		
 		PanelCenter.getMessageBox().addMessage(total, 0);
+		Hud.getMessageBox().addMessage(total, 0);
 	}
 
 
@@ -624,7 +627,11 @@ public class DriveAnalyzer extends SimulationBasics
 			super.simpleUpdate(tpf);
 			
 			if(updateMessageBox)
-				PanelCenter.getMessageBox().update();
+			{
+				//PanelCenter.getMessageBox().update();
+				Hud.getMessageBox().update();
+			}
+				
 			
 			if(replayIsRunning)
 				updatePosition();

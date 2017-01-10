@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import com.jme3.scene.Spatial.CullHint;
 import com.jme3.ui.Picture;
 
 import eu.opends.basics.SimulationBasics;
+import eu.opends.tools.Hud;
 import eu.opends.tools.PanelCenter;
 
 
@@ -90,8 +91,9 @@ public class ManipulatePictureTriggerAction extends TriggerAction
 			// set all pictures to ...
 			if(pictureID.equalsIgnoreCase("all"))
 			{
-				TreeMap<String, Picture> pictureMap = PanelCenter.getPictureMap();
-		        for(Entry<String,Picture> entry : pictureMap.entrySet())
+				//TreeMap<String, Picture> pictureMap = PanelCenter.getPictureMap();
+				TreeMap<String, Picture> pictureMap = Hud.getPictureMap();
+				for(Entry<String,Picture> entry : pictureMap.entrySet())
 		        	entry.getValue().setCullHint(visibility);
 			}
 			

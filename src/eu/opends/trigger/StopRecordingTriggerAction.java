@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package eu.opends.trigger;
 
 import eu.opends.analyzer.DataWriter;
 import eu.opends.main.Simulator;
+import eu.opends.tools.Hud;
 import eu.opends.tools.PanelCenter;
 
 /**
@@ -50,10 +51,12 @@ public class StopRecordingTriggerAction extends TriggerAction
 					System.out.println("Stop storing Drive-Data");
 					dataWriter.setDataWriterEnabled(false);
 					PanelCenter.getStoreText().setText(" ");
+					Hud.getStoreText().setText(" ");
 					
 					// print time elapsed since start trigger was hit to screen 
 					String timestamp = dataWriter.getElapsedTime();
 					PanelCenter.getMessageBox().addMessage(timestamp, 3);
+					Hud.getMessageBox().addMessage(timestamp, 3);
 				}
 			}
 			

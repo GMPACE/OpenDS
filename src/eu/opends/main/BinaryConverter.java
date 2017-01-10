@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.util.SkyFactory;
-import com.jme3.util.SkyFactory.EnvMapType;
 
 
 public class BinaryConverter extends SimpleApplication 
@@ -50,7 +49,7 @@ public class BinaryConverter extends SimpleApplication
 
     public void simpleInitApp() 
     {
-    	String path = "Scenes/DrivingSchoolTask/drivingSchoolTask.scene";
+    	String path = "Scenes/Countryside2/Countryside2Post.scene";
     	
     	assetManager.registerLocator("assets", FileLocator.class);
         
@@ -62,7 +61,7 @@ public class BinaryConverter extends SimpleApplication
         al.setColor(ColorRGBA.White.mult(1.7f));
         rootNode.addLight(al);
         
-        Spatial sky = SkyFactory.createSky(assetManager, SimulationDefaults.skyTexture, EnvMapType.CubeMap);
+        Spatial sky = SkyFactory.createSky(assetManager, SimulationDefaults.skyTexture, false);
         rootNode.attachChild(sky);
         
         cam.setLocation(new Vector3f(0,50,0));        

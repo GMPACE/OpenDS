@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import com.jme3.input.controls.ActionListener;
 import eu.opends.main.DriveAnalyzer;
 import eu.opends.main.DriveAnalyzer.VisualizationMode;
 import eu.opends.niftyGui.MessageBoxGUI;
+import eu.opends.tools.Hud;
 import eu.opends.tools.PanelCenter;
 
 /**
@@ -110,7 +111,8 @@ public class DriveAnalyzerActionListener implements ActionListener
 		{
 			if (value)
 			{
-				MessageBoxGUI messageBoxGUI = PanelCenter.getMessageBox();
+				//MessageBoxGUI messageBoxGUI = PanelCenter.getMessageBox();
+				MessageBoxGUI messageBoxGUI = Hud.getMessageBox();
 				messageBoxGUI.toggleDialog();
 				
 				analyzer.toggleMessageBoxUpdates();

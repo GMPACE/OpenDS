@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import eu.opends.drivingTask.scenario.ScenarioLoader.CarProperty;
 import eu.opends.main.SimulationDefaults;
 import eu.opends.main.Simulator;
 import eu.opends.tools.PanelCenter;
+import eu.opends.tools.Hud;
 
 /**
  * 
@@ -221,6 +222,9 @@ public class ManualTransmission
 		// output texts
 		PanelCenter.setGearIndicator(gear, isAutomaticTransmission);
 		PanelCenter.getEngineSpeedText().setText((int) currentEngineSpeed + " rpm");
+		
+		Hud.setGearIndicator(gear, isAutomaticTransmission);
+		Hud.getEngineSpeedText().setText((int) currentEngineSpeed + " rpm");
 		//TextCenter.getEngineSpeedText().setText((int) (powerPercentage * 100) + " %");
 	}
 	

@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,8 @@ import com.jme3.math.Vector3f;
 public interface TrafficObject 
 {
 	public Vector3f getPosition();
+	
+	public Quaternion getRotation();
 	
 	public void setPosition(Vector3f position);
 

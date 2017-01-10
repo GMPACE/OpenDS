@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -20,9 +20,7 @@ package eu.opends.trigger;
 
 import eu.opends.basics.SimulationBasics;
 import eu.opends.main.Simulator;
-import eu.opends.traffic.Pedestrian;
 import eu.opends.traffic.PhysicalTraffic;
-import eu.opends.traffic.TrafficCar;
 import eu.opends.traffic.TrafficObject;
 
 
@@ -38,8 +36,6 @@ public class MoveTrafficTriggerAction extends TriggerAction
 	private SimulationBasics sim;
 	private String trafficObjectName;
 	private String wayPointID;
-	private Boolean engineOn;
-	private Boolean pedestrianEnabled;
 	
 	
 	/**
@@ -60,22 +56,13 @@ public class MoveTrafficTriggerAction extends TriggerAction
 	 * 
 	 * @param wayPointID
 	 * 			ID of the way point to move the traffic object to.
-	 * 
-	 * @param engineOn
-	 * 			Set engine on/off.
-	 * 
-	 * @param pedestrianEnabled
-	 * 			Set pedestrian enabled/disabled.
 	 */
-	public MoveTrafficTriggerAction(SimulationBasics sim, float delay, int maxRepeat, String trafficObjectName, String wayPointID,
-			Boolean engineOn, Boolean pedestrianEnabled) 
+	public MoveTrafficTriggerAction(SimulationBasics sim, float delay, int maxRepeat, String trafficObjectName, String wayPointID) 
 	{
 		super(delay, maxRepeat);
 		this.sim = sim;
 		this.trafficObjectName = trafficObjectName;
 		this.wayPointID = wayPointID;
-		this.engineOn = engineOn;
-		this.pedestrianEnabled = pedestrianEnabled;
 	}
 
 	
@@ -93,16 +80,7 @@ public class MoveTrafficTriggerAction extends TriggerAction
 				TrafficObject trafficObject = physicalTraffic.getTrafficObject(trafficObjectName);
 				
 				if(trafficObject != null)
-				{
-					if(wayPointID != null && !wayPointID.equals(""))
-						trafficObject.setToWayPoint(wayPointID);
-				
-					if(trafficObject instanceof TrafficCar && engineOn != null)
-						((TrafficCar)trafficObject).setEngineOn(engineOn);
-					
-					if(trafficObject instanceof Pedestrian && pedestrianEnabled != null)
-						((Pedestrian)trafficObject).setEnabled(pedestrianEnabled);
-				}
+					trafficObject.setToWayPoint(wayPointID);
 				
 				updateCounter();
 			}

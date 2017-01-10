@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import eu.opends.basics.SimulationBasics;
 import eu.opends.drivingTask.scenario.ScenarioLoader;
 import eu.opends.drivingTask.scenario.ScenarioLoader.CarProperty;
 import eu.opends.main.Simulator;
+import eu.opends.tools.Hud;
 import eu.opends.tools.PanelCenter;
 
 /**
@@ -193,9 +194,16 @@ public class PowerTrain
 			litersPerHour = fuelConsumption[1];
 			
 			// update panels
-			PanelCenter.setLitersPer100Km(litersPer100Km);
-			PanelCenter.setLitersPerHour(litersPerHour);
-			PanelCenter.setTotalFuelConsumption(totalFuelConsumption);
+			//PanelCenter.setLitersPer100Km(litersPer100Km);
+			//PanelCenter.setLitersPerHour(litersPerHour);
+			//PanelCenter.setTotalFuelConsumption(totalFuelConsumption);
+			
+			if(Hud.flag >=1)
+			{
+				Hud.setLitersPer100Km(litersPer100Km);
+				Hud.setLitersPerHour(litersPerHour);
+				Hud.setTotalFuelConsumption(totalFuelConsumption);
+			}
 			
 			lastPanelUpdate = now;
 		}
@@ -399,7 +407,7 @@ public class PowerTrain
 
 	private float getPTire(float velocity, float vehicleMass, float gravityConstant) 
 	{
-		float rollingResistanceCoefficient = 0.008f;
+		float rollingResistanceCoefficient = 0.01f;
 
 		// power to overcome rolling resistance (in W == kg*m^2/s^3 ==  1 * kg * m/s^2 * m/s)
 		float pTire = rollingResistanceCoefficient * vehicleMass * gravityConstant * velocity;

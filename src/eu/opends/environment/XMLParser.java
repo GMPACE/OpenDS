@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -31,7 +31,11 @@ import eu.opends.car.SteeringCar;
 import eu.opends.environment.TrafficLight.*;
 import eu.opends.environment.TrafficLightException.InvalidStateCharacterException;
 import eu.opends.main.Simulator;
+import eu.opends.main.SimulatorClient;
+import eu.opends.multiDriver.MultiAdapter;
+import eu.opends.multiDriver.MultiCar;
 import eu.opends.multiDriver.MultiDriverClient;
+import eu.opends.tools.Hud;
 import eu.opends.tools.PanelCenter;
 
 
@@ -294,6 +298,7 @@ public class XMLParser
 								duration = 0;
 							}
 							PanelCenter.getMessageBox().addMessage(valueString,duration);
+							Hud.getMessageBox().addMessage(valueString, duration);
 						}
 						
 						
@@ -348,8 +353,8 @@ public class XMLParser
 						// channel3 input
 						else if(actionID.equals("channel3"))	
 						{
-							//float value = Float.parseFloat(valueString);
-							//float percentage = voltToPercentage(value, 0.2f, 3.7f);
+							float value = Float.parseFloat(valueString);
+							float percentage = voltToPercentage(value, 0.2f, 3.7f);
 							//System.out.println("channel3: " + percentage);
 						}
 						
@@ -571,7 +576,10 @@ public class XMLParser
 			//<multiDriver>
 			//	<update>
 			//		<add id="1" modelPath="test/subfolder/model.scene" driverName="test driver" />
-			//		<change id="5" pos="1;2;3" rot="1;2;3;4" heading="358.4" wheel="1;2" />
+			//		<change id="5" pos="1;2;3" rot="1;2;3;4" heading="358.4" wheel="1;2"
+			//		speed = "1" rpm = "1" velocity="1;2"  acceleration="1;2"
+			//		 brake="1"  distanceFromCenterLine="1" currentLine="1"
+			//		 LaneeDistance="1;2"  offsetFromLaneCenter="1" state="1" />
 			//		<remove id="13">
 			//	<update>
 			//</multiDriver>
@@ -586,15 +594,20 @@ public class XMLParser
 				Node currentNode = nodeLst.item(i);
 				
 				NodeList registeredList = ((Element) currentNode).getElementsByTagName("registered");
+				
+				
 				for(int j=0; j<registeredList.getLength(); j++)
 				{
 					Element currentRegistered = (Element) registeredList.item(j);
 					client.setID(currentRegistered.getAttribute("id"));
+
+	
 				}
-				
+				//KSS 서버로부터 데이터를 받아서 파싱하는 부분
 				NodeList updateList = ((Element) currentNode).getElementsByTagName("update");
 				for(int j=0; j<updateList.getLength(); j++)
 				{
+					
 					Element currentUpdate = (Element) updateList.item(j);
 					
 					NodeList addList = currentUpdate.getElementsByTagName("add");
@@ -604,19 +617,65 @@ public class XMLParser
 						String vehicleID = currentAdd.getAttribute("id");
 						String modelPath = currentAdd.getAttribute("modelPath");
 						String driverName = currentAdd.getAttribute("driverName");
-						client.addVehicle(vehicleID, modelPath, driverName);
+						
+						
+						/*
+						 * Start --- KSS
+						 * flag==2 이면 멀티스크린 
+						 * 1이면 멀티드라이버 추가 
+						 * 2면서 id가 mdv_1이 아니면 멀티드라이버추가
+						 * */
+						if(SimulatorClient.flag!=2)
+							client.addVehicle(vehicleID, modelPath, driverName);
+						if(SimulatorClient.flag==2 && vehicleID.equals("mdv_1")){
+							client.addVehicle2(vehicleID, modelPath, driverName);
+						}else{
+							client.addVehicle(vehicleID, modelPath, driverName);
+						}
+						//End --- KSS
 					}
 					
 					NodeList changeList = currentUpdate.getElementsByTagName("change");
 					for(int k=0; k<changeList.getLength(); k++)
 					{
+						/*
+						 * Start --- KSS
+						 * flag==2 이면 멀티스크린 
+						 * 1이면 멀티드라이버 변경사항 설정
+						 * 2면서 id가 mdv_1이 아니면 멀티드라이버 변경사항 설정
+						 * */
 						Element currentChange = (Element) changeList.item(k);
 						String vehicleID = currentChange.getAttribute("id");
 						String position = currentChange.getAttribute("pos");
 						String rotation = currentChange.getAttribute("rot");
 						String heading = currentChange.getAttribute("heading");
 						String wheel = currentChange.getAttribute("wheel");
-						client.changeVehicle(vehicleID, position, rotation, heading, wheel);
+						String speed = currentChange.getAttribute("speed");
+						String rpm = currentChange.getAttribute("rpm");
+						String velocity = currentChange.getAttribute("velocity");
+						String acceleration = currentChange.getAttribute("acceleration");
+						String brake = currentChange.getAttribute("brake");
+						String distanceFromCenterLine = currentChange.getAttribute("distanceFromCenterLine");
+						String currentLine = currentChange.getAttribute("currentLine");
+						String LaneeDistance = currentChange.getAttribute("LaneeDistance");
+						String offsetFromLaneCenter = currentChange.getAttribute("offsetFromLaneCenter");
+						String state = currentChange.getAttribute("state");
+						
+						
+						if(SimulatorClient.flag!=2)
+							client.changeVehicle(vehicleID, position, rotation, heading, wheel, speed,rpm, velocity, acceleration,
+									brake, distanceFromCenterLine, currentLine, LaneeDistance, offsetFromLaneCenter,state);
+							
+						if(SimulatorClient.flag==2 && vehicleID.equals("mdv_1")){
+							client.changeVehicle2(vehicleID, position, rotation, heading, wheel);
+						}						
+						else{
+							client.changeVehicle(vehicleID, position, rotation, heading, wheel, speed,rpm, velocity, acceleration,
+									brake, distanceFromCenterLine, currentLine, LaneeDistance, offsetFromLaneCenter,state);
+						}
+						
+						//End -- KSS
+						
 					}
 					
 					NodeList removeList = currentUpdate.getElementsByTagName("remove");

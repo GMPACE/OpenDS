@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -50,6 +50,7 @@ import eu.opends.niftyGui.dropDown.ResolutionDropDownModel;
 import eu.opends.niftyGui.dropDown.ResolutionDropDownViewConverter;
 import eu.opends.niftyGui.dropDown.SamplesDropDownModel;
 import eu.opends.niftyGui.dropDown.SamplesDropDownViewConverter;
+import eu.opends.tools.Hud;
 import eu.opends.tools.PanelCenter;
 
 
@@ -170,6 +171,7 @@ public class KeyMappingGUIController implements ScreenController
         // relative to the screen width and height (dialog will also be 
         // restarted with graphic change menu open)
         PanelCenter.reportResolutionChange();
+        Hud.reportResolutionChange();
         
 		//System.out.println("New: " + width + "x" + height + " @" + frequency + 
 		//		", " + colorDepth + "bpp, samples: " + samples + 

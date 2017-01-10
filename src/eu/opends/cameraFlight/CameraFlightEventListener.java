@@ -1,6 +1,6 @@
 /*
 *  This file is part of OpenDS (Open Source Driving Simulator).
-*  Copyright (C) 2016 Rafael Math
+*  Copyright (C) 2015 Rafael Math
 *
 *  OpenDS is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import eu.opends.basics.SimulationBasics;
 import eu.opends.camera.CameraFactory.CameraMode;
 import eu.opends.main.Simulator;
 import eu.opends.tools.PanelCenter;
+import eu.opends.tools.Hud;
 
 /**
  * 
@@ -57,6 +58,8 @@ public class CameraFlightEventListener implements CinematicEventListener
         PanelCenter.setFixSpeed(speedKmPerHour);
         PanelCenter.setFixRPM(2500);
         //PanelCenter.setGearIndicator(3, false);
+        Hud.setFixSpeed(speedKmPerHour);
+        Hud.setFixRPM(2500);
 	}
 	
 	
@@ -75,6 +78,8 @@ public class CameraFlightEventListener implements CinematicEventListener
         // reset speed and RPM indicator
         PanelCenter.setFixSpeed(0);
         PanelCenter.setFixRPM(0);
+        Hud.setFixRPM(0);
+        Hud.setFixSpeed(0);
         
         if(sim instanceof Simulator)
         {
